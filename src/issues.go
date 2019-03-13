@@ -51,12 +51,12 @@ func main() {
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 	} else {
-		fmt.Println("Issues")
-		fmt.Println("------")
-		for _, issue := range issues {
-			fmt.Printf("[%v] %v\n", *issue.ID, *issue.Title)
-			fmt.Printf("by %v\n", *issue.User.Login)
-			fmt.Println("------")
+		fmt.Println("Issues:")
+		fmt.Println()
+		for index, issue := range issues {
+			fmt.Printf("%v.\t[%v] %v\n", index, *issue.ID, *issue.Title)
+			fmt.Printf("\tby %v\n", *issue.User.Login)
+			fmt.Println()
 		}
 	}
 }
