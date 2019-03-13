@@ -51,14 +51,12 @@ func main() {
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
 	} else {
-		fmt.Println("success")
+		fmt.Println("Issues")
 		fmt.Println("------")
 		for _, issue := range issues {
-			fmt.Printf("issue [%v] %v\n", *issue.ID, *issue.Title)
+			fmt.Printf("[%v] %v\n", *issue.ID, *issue.Title)
 			fmt.Printf("by %v\n", *issue.User.Login)
 			fmt.Println("------")
 		}
 	}
-
-	fmt.Println("termingating")
 }
