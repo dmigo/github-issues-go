@@ -8,22 +8,17 @@ import (
 	"time"
 )
 
-const BASE_URI = "https://api.github.com"
-const OWNER = "gotify"
-const PROJECT_NAME = "server"
-const BUG_LABEL = "a:bug"
-
-func GetUrl() string {
+func GetUrl(configuration Configuration, arguments Arguments) string {
 	var Url *url.URL
-	Url, err := url.Parse(BASE_URI)
+	Url, err := url.Parse(*configuration.BaseUrl)
 
 	if err != nil {
-		panic(fmt.Sprintf("bad url: %s", BASE_URI))
+		panic(fmt.Sprintf("bad url: %s", configuration.BaseUrl))
 	}
 
-	Url.Path += "/repos/" + OWNER + "/" + PROJECT_NAME + "/issues"
+	Url.Path += "/repos/" + *arguments.Owner + "/" + *arguments.Project + "/issues"
 	parameters := url.Values{}
-	parameters.Add("labels", BUG_LABEL)
+	parameters.Add("labels", *arguments.Labels)
 	Url.RawQuery = parameters.Encode()
 
 	return Url.String()
@@ -31,8 +26,8 @@ func GetUrl() string {
 
 var myClient = &http.Client{Timeout: 10 * time.Second}
 
-func listIssues() ([]*Issue, error) {
-	var url = GetUrl()
+func listIssues(configuration Configuration, arguments Arguments) ([]*Issue, error) {
+	var url = GetUrl(configuration, arguments)
 	var issues []*Issue
 	r, err := myClient.Get(url)
 	if err != nil {
@@ -46,7 +41,11 @@ func listIssues() ([]*Issue, error) {
 }
 
 func main() {
-	issues, err := listIssues()
+
+	arguments := ReadArguments()
+	configuration := GetConfiguration()
+
+	issues, err := listIssues(configuration, arguments)
 
 	if err != nil {
 		fmt.Printf("error: %v\n", err)
